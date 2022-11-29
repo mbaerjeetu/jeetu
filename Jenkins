@@ -8,4 +8,20 @@ pipeline {
             }
         }
     }
+    
+    stage {'Upload Config Data'} {
+    Steps {
+    sh "echo Validating config file {$configfilepath} "
+    script {
+    ChangeSetId=snDevOpsconfigUpload{
+    applicationName: 'Jenkins 101'
+     uploadTarget: 'component'
+     namePath: 'wep-api-v1.0'
+     configFilePath: '**/*.param.json'
+     convertpath:'true'
+     dataFormat: 'json'
+     autoCommit: true​
+     autoValidate: true​
+     changesetNumber: '$(componentUpload.changesetNumber)'
+    
 }
