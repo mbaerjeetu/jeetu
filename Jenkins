@@ -11,13 +11,12 @@ pipeline {
     
     stage {'Upload Config Data'} {
     Steps {
-    componante
     sh "echo Validating config file {$configfilepath} "
     script {
     ChangeSetId=snDevOpsconfigUpload(
     applicationName: 'Jenkins 101'
-     uploadTarget: 'component'
-     namePath: 'wep-api-v1.0',
+     uploadTarget:'component'
+     namePath:'wep-api-v1.0',
      configFilePath: '**/*.param.json',
      convertpath:'true',
      dataFormat: 'json',
