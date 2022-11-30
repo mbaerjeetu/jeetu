@@ -10,13 +10,14 @@ pipeline {
     }
     }
     {
- stages ('Upload Config Data') {
+ stages {
+ stage('Upload Config Data') {
     Steps {
     sh "echo Validating config file {$configfilepath} "
     script {
     ChangeSetId=snDevOpsconfigUpload(
     applicationName: 'Jenkins 101'
-     
+     uploadTarget:'component'
      namePath:'wep-api-v1.0',
     configFile: 'infra/*.json'
      dataFormat: 'json',
@@ -27,6 +28,7 @@ pipeline {
     
     echo "Validation result $changesetid"
     
+    }}}}
     snDevOpsconfigvalidate(
     applicationName:'Jenkins 101'
     deployableName: 'production'
