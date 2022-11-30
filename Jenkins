@@ -13,15 +13,15 @@ pipeline {
     Steps {
     sh "echo Validating config file {$configfilepath} "
     script {
-    ChangeSetId=snDevOpsconfigUpload{
+    ChangeSetId=snDevOpsconfigUpload(
     applicationName: 'Jenkins 101'
-     uploadTarget: 'component'
-     namePath: 'wep-api-v1.0'
-     configFilePath: '**/*.param.json'
-     convertpath:'true'
-     dataFormat: 'json'
-     autoCommit: true​
-     autoValidate: true​
+     uploadTarget: 'component',
+     namePath: 'wep-api-v1.0',
+     configFilePath: '**/*.param.json',
+     convertpath:'true',
+     dataFormat: 'json',
+     autoCommit: 'true'​
+     autoValidate: 'false'​
      changesetNumber: '$(componentUpload.changesetNumber)'
     
 }
