@@ -23,5 +23,21 @@ pipeline {
      autoCommit: 'true'​
      autoValidate: 'false'​
      changesetNumber: '$(componentUpload.changesetNumber)'
+    )
+    snDevOpsconfigvalidate(
+    applicationName:'Jenkins 101'
+    deployableName: 'production'
+    snapShotName: 'Production_1-v1.dpl'
+    )
+    snDevOpsconfigGetSnapshots(
     
+    applicationName:'Jenkins 101'
+    deployableName: 'production'
+    isValidate:'true'
+    )
+    
+    snDevOpsconfigPublish(
+        applicationName:'Jenkins 101'
+    deployableName: 'production'
+    snapShotName: 'Production_1-v1.dpl'
 }
