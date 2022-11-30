@@ -11,6 +11,7 @@ pipeline {
     
     stage {'Upload Config Data'} {
     Steps {
+    componante
     sh "echo Validating config file {$configfilepath} "
     script {
     ChangeSetId=snDevOpsconfigUpload(
