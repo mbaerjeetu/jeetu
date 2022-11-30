@@ -16,7 +16,7 @@ pipeline {
     sh "echo Validating config file {$configfilepath} "
     script {
     ChangeSetId=snDevOpsconfigUpload(
-    applicationName: 'Jenkins 101'
+    applicationName: 'Jeetu Devops Config'
      uploadTarget:'component'
      namePath:'wep-api-v1.0',
     configFile: 'infra/*.json'
