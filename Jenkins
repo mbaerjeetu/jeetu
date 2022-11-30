@@ -17,13 +17,13 @@ pipeline {
     script {
     ChangeSetId=snDevOpsconfigUpload(
     applicationName: 'Jeetu Devops Config'
-     Target:'component'
-     namePath:'wep-api-v1.0',
+    Target:'component'
+    namePath:'wep-api-v1.0',
     configFile: 'infra/*.json'
-     dataFormat: 'json',
-     autoCommit: 'true'​
-     autoValidate: 'false'​
-     changesetNumber: "${changeset}
+    dataFormat: 'json',
+    autoCommit: 'true'​
+    autoValidate: 'false'​
+    changesetNumber: "${changeset}
     )
     
     echo "Validation result $changesetid"
