@@ -17,7 +17,7 @@ pipeline {
     script {
     ChangeSetId=snDevOpsconfigUpload(
     applicationName: 'Jeetu Devops Config'
-     uploadTarget:'component'
+     Target:'component'
      namePath:'wep-api-v1.0',
     configFile: 'infra/*.json'
      dataFormat: 'json',
