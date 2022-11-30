@@ -1,0 +1,33 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebsiteName": {
+            "value": "WebsiteName"
+        },
+        "PartsUnlimitedServerName": {
+            "value": "Server Name"
+        },
+        "PartsUnlimitedHostingPlanName": {
+            "value": "Hosting Plan"
+        },
+        "CdnStorageAccountName": {
+            "value": "Act Name"
+        },
+        "CdnStorageContainerName": {
+            "value": "Container Name"
+        },
+        "CdnStorageAccountNameForDev": {
+            "value": "Act Name for Dev"
+        },
+        "CdnStorageContainerNameForDev": {
+            "value": "COntainer Name for Dev"
+        },
+        "CdnStorageAccountNameForStaging": {
+            "value": "Act for staging"
+        },
+        "CdnStorageContainerNameForStaging": {
+            "value": "Contaner for staging"
+        }
+    }
+}
