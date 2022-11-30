@@ -15,7 +15,7 @@ pipeline {
     script {
     ChangeSetId=snDevOpsconfigUpload(
     applicationName: 'Jenkins 101'
-     uploadTarget: 'component',
+     uploadTarget: 'component'
      namePath: 'wep-api-v1.0',
      configFilePath: '**/*.param.json',
      convertpath:'true',
