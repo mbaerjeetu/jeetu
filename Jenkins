@@ -9,7 +9,15 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'This is Deploy Stage'
+                snDevopsChange(changeRequestDetails:"""
+                {
+                "setCloseCode:false,
+                "attributes":{
+                "sys_created_by":"admin",
+                "sys_Updates_by":" ",                
+                }
+                }
+               """ )
             }
         }
     }
