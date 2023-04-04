@@ -1,14 +1,27 @@
 pipeline {
     agent any
-
+      environment {
+    APPSYSID = 'be16e4f0474a2d10d31dfc42846d43c3'
+    BRANCH = "${BRANCH_NAME}"
+    CREDENTIALS = '6fb72dcf-84a8-4b4a-81ae-c4e5977773ba'
+    DEVENV = 'https://jeetudemo3.service-now.com//'
+    TESTENV = 'https://jeetudemo3.service-now.com//'
+    PRODENV = 'https://jeetudemo3.service-now.com//'
+    TESTSUITEID = 'b1ae55eedb541410874fccd8139619fb'
+}
     stages {
         stage('Build') {
             steps {
                 echo 'THis is Build Stage'
+                snApplyChanges(appSysId: "${APPSYSID}", branchName: "${BRANCH}", url: "${DEVENV}", credentialsId: "${CREDENTIALS}")
+                snPublishApp(credentialsId: "${CREDENTIALS}", appSysId: "${APPSYSID}", obtainVersionAutomatically: true, url: "${DEVENV}")
+                snInstallApp(credentialsId: "${CREDENTIALS}", url: "${TESTENV}", appSysId: "${APPSYSID}")
+                snRunTestSuite(credentialsId: "${CREDENTIALS}", url: "${TESTENV}", testSuiteSysId: "${TESTSUITEID}", withResults: true)
             }
         }
         stage('Deploy') {
             steps {
+            snInstallApp(credentialsId: "${CREDENTIALS}", url: "${PRODENV}", appSysId: "${APPSYSID}")
                 snDevopsChange(changeRequestDetails:"""
                 {
                 "setCloseCode:false,
@@ -22,4 +35,5 @@ pipeline {
         }
     }
     }
+    
   
