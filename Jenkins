@@ -22,8 +22,8 @@ pipeline {
                     //sh 'npm install -g @angular/cli@12.2.13'
                     //sh 'npm install --save-dev @angular-devkit/build-angular'
                     //sh 'npm run build'
-                    zip zipFile: "travelbooking-${BUILD_ID}.zip", dir:'dist/samples-app', archive:true
-                    stash includes: "travelbooking-${BUILD_ID}.zip", name: 'nodejsapp' 
+                  //  zip zipFile: "travelbooking-${BUILD_ID}.zip", dir:'dist/samples-app', archive:true
+                  //  stash includes: "travelbooking-${BUILD_ID}.zip", name: 'nodejsapp' 
                     archiveArtifacts artifacts: '**/*.zip', onlyIfSuccessful: true
                 }
                 echo "Upload artifact to JFrog Artifactory"
