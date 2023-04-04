@@ -2,7 +2,7 @@ pipeline {
     agent any
       environment {
     appName='Appdemo3 Jenkinsgithub'
-    snapshotName: 'Test Snapshot'
+    snapshotName= 'Test Snapshot'
 }
     stages {
         stage('Build') {
