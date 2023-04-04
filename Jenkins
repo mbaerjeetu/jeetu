@@ -8,7 +8,7 @@ pipeline {
     TESTENV = 'https://jeetudemo3.service-now.com//'
     PRODENV = 'https://jeetudemo3.service-now.com//'
     TESTSUITEID = 'b1ae55eedb541410874fccd8139619fb'
-    appName=Appdemo3 Jenkinsgithub
+    appName='Appdemo3 Jenkinsgithub'
 }
     stages {
         stage('Build') {
