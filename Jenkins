@@ -1,6 +1,7 @@
 pipeline {
 
-    environment {"
+    environment 
+    {
         reponame = ""
         artname = ""
         artversion = "1.0.${BUILD_ID}"
