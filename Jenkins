@@ -2,6 +2,7 @@ pipeline {
     agent any
       environment {
     appName='Appdemo3 Jenkinsgithub'
+    snapshotName: 'Test Snapshot'
 }
     stages {
         stage('Build') {
@@ -14,14 +15,15 @@ pipeline {
             steps{
                 echo "Creating the Change Request into ServiceNow"
                 script {
-                    snDevOpsChange(
+                    approveChange = snDevOpsChange(
                         changeRequestDetails: "{\"setCloseCode\" : false, \"attributes\": {\"requested_by\": {\"name\": \"Cyrille Rivière\"},\"short_description\": \"Application deployment for TravelBooking\", \"cmdb_ci\": {\"name\": \"samples-prd-backend-1\"}, \"business_service\": {\"name\": \"samples-prd\"}, \"assignment_group\": {\"name\": \"Change Management\"}}}",
                         enabled: "true",
                         ignoreErrors: "true",
                         applicationName:"${appName}",
+                        snapshotName: "${snapshotName}"
                     )
                 }
-                
+                echo "Result: $approveChange"
               
             }
             }
