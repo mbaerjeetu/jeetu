@@ -1,122 +1,16 @@
 pipeline {
-
-    environment 
-    {
-        reponame = ""
-        artname = ""
-        artversion = "1.0.${BUILD_ID}"
-        packagename = ""
-    }
-
     agent any
-    tools {nodejs "nodejs"}
-
+      environment {
+    appName='Appdemo3 Jenkinsgithub'
+}
     stages {
         stage('Build') {
-             steps {
-                echo sh(returnStdout: true, script: 'env')
-                git url: 'https://gitlab.com/cyr-riv/samples.git', branch: 'main', credentialsId: 'gitlab_travelbooking'
-                sh 'node -v'
-                dir ('samples-app') {
-                    //sh 'npm install -g npm@7.5.6'
-                    //sh 'npm install -g @angular/cli@12.2.13'
-                    //sh 'npm install --save-dev @angular-devkit/build-angular'
-                    //sh 'npm run build'
-                  //  zip zipFile: "travelbooking-${BUILD_ID}.zip", dir:'dist/samples-app', archive:true
-                  //  stash includes: "travelbooking-${BUILD_ID}.zip", name: 'nodejsapp' 
-                    archiveArtifacts artifacts: '**/*.zip', onlyIfSuccessful: true
-                }
-                echo "Upload artifact to JFrog Artifactory"
-                script {
-                    def server = Artifactory.server 'jfrog-cloud'
-                    def uploadSpec = """{
-                        "files": [
-                            {
-                            "pattern": "samples-app/travelbooking-${BUILD_ID}.zip",
-                            "target": "travelbooking-generic-local/",
-                            "props": "type=zip;version=1.0.${BUILD_ID}"
-                            }
-                        ]
-                        }"""
-                    server.upload spec: uploadSpec
-                }
-            }
-        }
-        stage('Registering the artifact') {
-            steps{
-                echo "Register the artifact to ServiceNow"
-                script {
-                    registerArtifact = snDevOpsArtifact(
-                        artifactsPayload: "{\"artifacts\": [{\"name\": \"$artname\",\"repositoryName\": \"$reponame\",\"semanticVersion\": \"$artversion\",\"version\": \"$artversion\"}],\"projectName\": \"${BUILD_TAG}\",\"taskExecutionNumber\":\"${BUILD_ID}\"}",  
-                        enabled: "true",
-                        ignoreErrors: "true"
-                    )
-                }
-                echo "Result: $registerArtifact"
-            }
-        }
-        
-        stage('Running Test') {
             steps {
-                script {
-                    try {
-                        //sh 'wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
-                        //sh 'sudo -S apt-get install -y ./google-chrome*.deb;'
-                        sh 'export CHROME_BIN=/usr/bin/google-chrome'
-                        dir ('samples-app') {
-                            //sh 'npm install --save-dev karma-junit-reporter'
-                            //sh 'npm run test -- --no-watch --code-coverage --no-progress --browsers=ChromeHeadlessCI'
-                        }
-                    } catch (e) {
-                        stageResult = 'UNSTABLE'
-                        buildResult = 'SUCCESS'
-                    }
-                }
-            }
-            post {
-                always {
-                    junit testResults: 'samples-app/reports/testResults.xml'
-                }
+                echo 'THis is Build Stage'
+                
             }
         }
-
-        stage('Running SonarQube Analysis') {
-            steps{
-                echo "Scanning the code"
-                script{
-                    def scannerHome = tool 'SonarScanner';
-                    withSonarQubeEnv(
-                        installationName: 'sonarqube-aks'
-                    ) {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
-            }
-        }  
-
-        
-        stage('Registering the package') {
-            steps {
-                echo "Register the package to ServiceNow"
-                script {
-                    registerPackage = snDevOpsPackage(
-                        name: "$packagename",
-                        artifactsPayload: "{\"artifacts\": [{\"name\": \"$artname\",\"repositoryName\": \"$reponame\",\"semanticVersion\": \"$artversion\",\"version\": \"$artversion\"}],\"branchName\": \"main\"}",  
-                        enabled: "true",
-                        ignoreErrors: "true"
-                    )
-                }
-                echo "Result: $registerPackage"
-            }
-        }
-
-        stage('deploy to UAT') {
-            steps {
-                echo "Deploying to PreProduction..."
-            }
-        }
-
-        stage('Approve the Change') {
+        stage('Deploy') {
             steps{
                 echo "Creating the Change Request into ServiceNow"
                 script {
@@ -125,26 +19,11 @@ pipeline {
                         enabled: "true",
                         ignoreErrors: "true",
                         applicationName:"${appName}",
-                        snapshotName: "${snapshotName}"
                     )
                 }
                 echo "Result: $approveChange"
+              
+            }
             }
         }
-
-        stage('deploy to PROD') {
-            steps {
-                echo "Deploying to Production..."
-                script {
-                    if (deploymentState == "true") {
-                        echo "Deployment has succeeded"
-                    }
-                    else {
-                        error "Deployment has failed"
-                    }
-                }
-            }
-        }
-    }
-}
-
+    } 
