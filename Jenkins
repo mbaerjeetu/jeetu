@@ -8,6 +8,7 @@ pipeline {
     TESTENV = 'https://jeetudemo3.service-now.com//'
     PRODENV = 'https://jeetudemo3.service-now.com//'
     TESTSUITEID = 'b1ae55eedb541410874fccd8139619fb'
+    appName=Appdemo3 Jenkinsgithub
 }
     stages {
         stage('Build') {
@@ -17,16 +18,19 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {       
-                //snDevopsChange(changeRequestDetails:"""
-                {
-                "setCloseCode:false,
-                "attributes":{
-                "sys_created_by":"admin",
-                "sys_Updates_by":" ",                
+            steps{
+                echo "Creating the Change Request into ServiceNow"
+                script {
+                    approveChange = snDevOpsChange(
+                        changeRequestDetails: "{\"setCloseCode\" : false, \"attributes\": {\"requested_by\": {\"name\": \"Cyrille Rivière\"},\"short_description\": \"Application deployment for TravelBooking\", \"cmdb_ci\": {\"name\": \"samples-prd-backend-1\"}, \"business_service\": {\"name\": \"samples-prd\"}, \"assignment_group\": {\"name\": \"Change Management\"}}}",
+                        enabled: "true",
+                        ignoreErrors: "true",
+                        applicationName:"${appName}",
+                    )
                 }
-                }
-              // """ )
+                echo "Result: $approveChange"
+                deploymentState == "true",
+            }
             }
         }
     }
