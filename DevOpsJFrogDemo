@@ -1,0 +1,94 @@
+def semanticVersion = "${env.BUILD_NUMBER}.0.0"
+def artifactname = "snow-devops-build-jfrog-${semanticVersion}.jar"
+def repoName = "JenkinsDevOpsProject"
+def pipelineName = "SNDevOpsJFrogDemo"
+def packageName1 = "JenkinsDevOpsProject-1.36.0_pkg_${env.BUILD_NUMBER}"
+
+pipeline {
+    agent any
+    
+    tools {
+       maven 'Maven'
+   }
+   
+    stages {
+        
+        stage('Build') {
+           steps {
+              
+              sh 'mvn -B -DskipTests clean package'
+
+           }
+       }
+       stage('Test') {
+           steps {
+              
+              sh 'mvn test'
+           }
+           post {
+             always {
+                junit "**/target/surefire-reports/*.xml"
+             }
+           }
+       }
+        stage('Upload-JFrog') {
+         
+            steps {
+                echo "uploading jfrog artifact-${env.BUILD_NUMBER}"
+            }
+            
+            post {
+                always {
+                    script {
+                             def server = Artifactory.server 'JFROG1'
+                             def uploadSpec= """{
+                                "files": [{
+                                   "pattern": "/var/jenkins_home/workspace/Sunil/SNDevOpsJFrogDemo/target/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
+                                   "target":"sunil-maven-repo1/demo/${env.BUILD_NUMBER}/"
+                                }]
+                             }"""
+            
+                          def buildInfo = server.upload(uploadSpec)
+                          server.publishBuildInfo buildInfo   
+                        }
+                    }
+               }
+
+        }
+        
+
+        stage('Download-Jfrog') {
+        
+            steps {
+                echo "Download-Jfrog-${env.BUILD_NUMBER}"
+                sleep 10
+            }
+
+            post {
+                always {
+                    script {
+                             def server = Artifactory.server 'JFROG1'
+                             def downSpec = """{
+                                "files": [{
+                                   "pattern": "sunil-maven-repo1/demo/${env.BUILD_NUMBER}/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
+                                   "target": "/var/jenkins_home/workspace/Sunil/SNDevOpsJFrogDemo/"
+                                }                              
+                             ]
+                             }"""
+
+                          def buildInfo = server.download(downSpec)
+                          server.publishBuildInfo buildInfo
+                    }
+                }
+            }
+
+        }
+
+        stage('Deploy for production') {
+            steps {
+                echo "prod branch deployment - -${env.BRANCH_NAME}"
+                snDevOpsChange()
+            }
+        }
+    }
+}
