@@ -1,0 +1,58 @@
+def pipelineName = "SunilMultiBranchPipelineJFrog"
+def repoName = "JenkinsDevOpsProject"
+def semanticVersion = "1.${env.BUILD_NUMBER}.0.0"
+def artifactname = "snow-devops-build-artifact-${semanticVersion}.jar"
+def packageName = "snow-devops-pkg_${env.BUILD_NUMBER}"
+
+pipeline {
+    agent any
+    tools {
+            maven 'Maven'
+    }
+    
+    stages {
+       stage('Build') {
+           steps {
+                    sh 'mvn -B -DskipTests clean package'
+           }
+       }
+       stage('Test') {
+           steps {
+                    sh 'mvn test'
+           }
+           post {
+                  always {
+                           junit "**/target/surefire-reports/*.xml"
+                  }
+           }
+       }
+      
+       stage('Pre-Prod') {
+		      steps {
+		              sleep(3);
+      		              snDevOpsArtifact(artifactsPayload: """{"artifacts": [{"name": "${artifactname}", "version": "1.38.${env.BUILD_NUMBER}","semanticVersion": "1.${env.BUILD_NUMBER}.0-SNAPSHOT","repositoryName": "${repoName}"}],"branchName":"${env.BRANCH_NAME}"}""")
+                	      snDevOpsPackage(name: "${packageName}", artifactsPayload: """{"artifacts":[{"name": "${artifactname}", "version": "1.38.${env.BUILD_NUMBER}","semanticVersion": "1.${env.BUILD_NUMBER}.0-SNAPSHOT","repositoryName": "${repoName}"}], "branchName":"${env.BRANCH_NAME}"}""")
+          	      }       
+       }
+      
+       stage('Deploy for development') {
+          steps {
+                  echo "dev branch deployment -${env.BRANCH_NAME}"
+                  snDevOpsStep()
+                  sleep 5
+          }
+       }
+
+       stage('Deploy for production') {
+          when {
+                  branch 'main'
+          }
+          steps {
+                  echo "prod branch deployment - -${env.BRANCH_NAME}"
+                  snDevOpsStep()
+                  snDevOpsChange()
+                  sleep 5
+          }
+       }
+    }
+}

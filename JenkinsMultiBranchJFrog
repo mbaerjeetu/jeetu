@@ -1,0 +1,118 @@
+def semanticVersion = "${env.BUILD_NUMBER}.0.0"
+def artifactname = "snow-devops-build-jfrog-${semanticVersion}.jar"
+def repoName = "JenkinsDevOpsProject"
+def pipelineName = "SunilMultiBranchPipelineJFrog"
+def packageName1 = "JenkinsDevOpsProject-1.36.0_pkg_${env.BUILD_NUMBER}"
+
+pipeline {
+    agent any
+    
+    tools {
+       maven 'Maven'
+   }
+   
+    stages {
+        
+        stage('Build') {
+           steps {
+              
+              sh 'mvn -B -DskipTests clean package'
+
+           }
+       }
+       stage('Test') {
+           steps {
+              
+              sh 'mvn test'
+           }
+           post {
+             always {
+                junit "**/target/surefire-reports/*.xml"
+             }
+           }
+       }
+        stage('Upload-JFrog') {
+         
+            steps {
+                echo "uploading jfrog artifact-${env.BRANCH_NAME}"
+            }
+            
+            post {
+                always {
+                    script {
+                             def server = Artifactory.server 'JFROG1'
+                             def uploadSpec= """{
+                                "files": [{
+                                   "pattern": "/var/jenkins_home/workspace/nchPipelineJFrog_scratch_dcv1.38/target/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
+                                   "target":"sunil-multibranch-maven/jfrog/${env.BRANCH_NAME}/${env.BUILD_NUMBER}/"
+                                }]
+                             }"""
+            
+                          def buildInfo = server.upload(uploadSpec)
+                          server.publishBuildInfo buildInfo   
+                        }
+                    }
+               }
+
+        }
+        
+
+        stage('Download-Jfrog') {
+        
+            when {
+                branch 'scratch/dcv1.38'
+            }
+            
+            steps {
+                echo "Download-Jfrog-${env.BRANCH_NAME}"
+                sleep 10
+            }
+
+            post {
+                always {
+                    script {
+                             def server = Artifactory.server 'JFROG1'
+                             def downSpec = """{
+                                "files": [{
+                                   "pattern": "sunil-multibranch-maven/jfrog/${env.BRANCH_NAME}/${env.BUILD_NUMBER}/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
+                                   "target": "/var/jenkins_home/workspace/nchPipelineJFrog_scratch_dcv1.38/"
+                                },
+                                {
+                                   "pattern": "sunil-maven-repo1/${env.BUILD_NUMBER}/jfrog_saif.jar",
+                                   "target": "/var/jenkins_home/workspace/nchPipelineJFrog_scratch_dcv1.38/"
+                                }                                
+                             ]
+                             }"""
+
+                          def buildInfo = server.download(downSpec)
+                          server.publishBuildInfo buildInfo
+                    }
+                }
+            }
+
+        }
+
+        stage('Deploy for development') {
+            steps {
+                echo "dev branch deployment -${env.BRANCH_NAME}"
+                snDevOpsStep()
+                
+                sleep 15
+            }
+        }
+
+        stage('Deploy for production') {
+            when {
+                branch 'scratch/dcv1.38'
+            }
+            steps {
+                echo "prod branch deployment - -${env.BRANCH_NAME}"
+                snDevOpsStep()
+                snDevOpsChange()
+                sleep 15
+            }
+        }
+
+
+    }
+}
