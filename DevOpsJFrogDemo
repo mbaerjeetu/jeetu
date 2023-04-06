@@ -49,6 +49,7 @@ pipeline {
                              }"""
             
                           def buildInfo = server.upload(uploadSpec)
+                          echo "Uploading time Build Info-${buildInfo}"
                           server.publishBuildInfo buildInfo   
                         }
                     }
@@ -77,6 +78,7 @@ pipeline {
                              }"""
 
                           def buildInfo = server.download(downSpec)
+                          echo "Downloading time Build Info-${buildInfo}"
                           server.publishBuildInfo buildInfo
                     }
                 }
