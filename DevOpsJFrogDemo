@@ -1,7 +1,7 @@
 def semanticVersion = "${env.BUILD_NUMBER}.0.0"
 def artifactname = "snow-devops-build-jfrog-${semanticVersion}.jar"
-def repoName = "JenkinsDevOpsProject"
-def pipelineName = "SNDevOpsJFrogDemo"
+def repoName = "jeetu"
+def pipelineName = "Gitub05042023"
 def packageName1 = "JenkinsDevOpsProject-1.36.0_pkg_${env.BUILD_NUMBER}"
 
 pipeline {
@@ -43,7 +43,7 @@ pipeline {
                              def server = Artifactory.server 'JFROG1'
                              def uploadSpec= """{
                                 "files": [{
-                                   "pattern": "/var/jenkins_home/workspace/Sunil/SNDevOpsJFrogDemo/target/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
+                                   "pattern": "/var/jenkins_home/workspace/Gitub05042023/target/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
                                    "target":"sunil-maven-repo1/demo/${env.BUILD_NUMBER}/"
                                 }]
                              }"""
