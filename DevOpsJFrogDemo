@@ -1,7 +1,7 @@
 def semanticVersion = "${env.BUILD_NUMBER}.0.0"
 def artifactname = "snow-devops-build-jfrog-${semanticVersion}.jar"
-def repoName = "jeetu"
-def pipelineName = "Gitub05042023"
+def repoName = "JenkinsDevOpsProject"
+def pipelineName = "SNDevOpsJFrogDemo"
 def packageName1 = "JenkinsDevOpsProject-1.36.0_pkg_${env.BUILD_NUMBER}"
 
 pipeline {
@@ -43,13 +43,12 @@ pipeline {
                              def server = Artifactory.server 'JFROG1'
                              def uploadSpec= """{
                                 "files": [{
-                                   "pattern": "/var/jenkins_home/workspace/workspace/Gitub05042023/target/jeetu-0.0.1-SNAPSHOT.jar",
+                                   "pattern": "/var/jenkins_home/workspace/Sunil/SNDevOpsJFrogDemo/target/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
                                    "target":"sunil-maven-repo1/demo/${env.BUILD_NUMBER}/"
                                 }]
                              }"""
             
                           def buildInfo = server.upload(uploadSpec)
-                          echo "Uploading time Build Info-${buildInfo}"
                           server.publishBuildInfo buildInfo   
                         }
                     }
@@ -71,14 +70,13 @@ pipeline {
                              def server = Artifactory.server 'JFROG1'
                              def downSpec = """{
                                 "files": [{
-                                   "pattern": "sunil-maven-repo1/demo/${env.BUILD_NUMBER}/jeetu-0.0.1-SNAPSHOT.jar",
-                                   "target": "/var/jenkins_home/workspace/workspace/Gitub05042023/"
+                                   "pattern": "sunil-maven-repo1/demo/${env.BUILD_NUMBER}/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
+                                   "target": "/var/jenkins_home/workspace/Sunil/SNDevOpsJFrogDemo/"
                                 }                              
                              ]
                              }"""
 
                           def buildInfo = server.download(downSpec)
-                          echo "Downloading time Build Info-${buildInfo}"
                           server.publishBuildInfo buildInfo
                     }
                 }
