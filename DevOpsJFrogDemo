@@ -1,7 +1,7 @@
 def semanticVersion = "${env.BUILD_NUMBER}.0.0"
 def artifactname = "snow-devops-build-jfrog-${semanticVersion}.jar"
-def repoName = "JenkinsDevOpsProjectjeetu"
-def pipelineName = "SNDevOpsJFrogDemo"
+def repoName = "JenkinsDevOpsProject"
+def pipelineName = "SNDevOpsJFrogDemojeetu"
 def packageName1 = "JenkinsDevOpsProject-1.36.0_pkg_${env.BUILD_NUMBER}"
 
 pipeline {
