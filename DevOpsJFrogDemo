@@ -71,7 +71,7 @@ pipeline {
                              def downSpec = """{
                                 "files": [{
                                    "pattern": "sunil-maven-repo1/demo/${env.BUILD_NUMBER}/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
-                                   "target": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/"
+                                   "target": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/target"
                                 }                              
                              ]
                              }"""
