@@ -43,7 +43,7 @@ pipeline {
                              def server = Artifactory.server 'JFROG1'
                              def uploadSpec= """{
                                 "files": [{
-                                   "pattern": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/target/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
+                                   "pattern": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProject/target/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
                                    "target":"sunil-maven-repo1/demo/${env.BUILD_NUMBER}/"
                                 }]
                              }"""
