@@ -43,7 +43,7 @@ pipeline {
                              def server = Artifactory.server 'JFROG1'
                              def uploadSpec= """{
                                 "files": [{
-                                   "pattern": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/target/JenkinsDevOpsProject-0.0.1-SNAPSHOT.jar",
+                                   "pattern": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/target/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
                                    "target":"sunil-maven-repo1/demo/${env.BUILD_NUMBER}/"
                                 }]
                              }"""
@@ -71,7 +71,7 @@ pipeline {
                              def downSpec = """{
                                 "files": [{
                                    "pattern": "sunil-maven-repo1/demo/${env.BUILD_NUMBER}/JenkinsDevOpsProject-1.36.0-SNAPSHOT.jar",
-                                   "target": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/target"
+                                   "target": "/var/jenkins_home/workspace/Sunil/JenkinsDevOpsProjectjeetu/"
                                 }                              
                              ]
                              }"""
